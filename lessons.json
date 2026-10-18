@@ -10,10 +10,12 @@
   {
     "title": "Lesson 3 - YouTube Example",
     "text": "This lesson has a video",
-    "youtube": "https://www.youtube.com/watch?v=kqtD5dpn9c8"
+    "youtube": "https://www.youtube.com/watch?v=kqtD5dpn9c8",
+    "image": "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=600"
   },
   {
     "title": "Lesson 4 - Online Test",
-    "text": "This lesson came from the internet!"
+    "text": "This lesson came from the internet!",
+    "image": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600"
   }
 ]
