@@ -1,0 +1,15 @@
+[
+  {
+    "title": "Lesson 1 - Hello World",
+    "text": "This is the first lesson"
+  },
+  {
+    "title": "Lesson 2 - Variables",
+    "text": "Variable is like a box to store data"
+  },
+  {
+    "title": "Lesson 3 - YouTube Example",
+    "text": "This lesson has a video",
+    "youtube": "https://www.youtube.com/watch?v=kqtD5dpn9c8"
+  }
+]
