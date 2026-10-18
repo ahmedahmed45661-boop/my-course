@@ -11,5 +11,9 @@
     "title": "Lesson 3 - YouTube Example",
     "text": "This lesson has a video",
     "youtube": "https://www.youtube.com/watch?v=kqtD5dpn9c8"
+  },
+  {
+    "title": "Lesson 4 - Online Test",
+    "text": "This lesson came from the internet!"
   }
 ]
