@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ahmed Course</title>
+<style>
+body{background:#0f0f0f;color:white;padding:15px;font-family:sans-serif}
+.card{background:#222;padding:15px;border-radius:12px;margin:10px 0}
+img{width:100%;border-radius:10px}
+iframe{width:100%;height:200px;border-radius:10px}
+</style>
+</head>
+<body>
+<h2>📚 My Course</h2>
+<div id="app">جاري التحميل...</div>
+<script>
+fetch('https://raw.githubusercontent.com/ahmedahmed45661-boop/my-course/main/lessons.json')
+.then(r=>r.json()).then(lessons=>{
+let html='';
+lessons.forEach((l,i)=>{
+let img=l.image?`<img src="${l.image}">`:'';
+let yt=l.youtube?`<iframe src="https://www.youtube.com/embed/${l.youtube.split('v=')[1]}"></iframe>`:'';
+html+=`<div class="card"><b>${i+1}. ${l.title}</b><p>${l.text}</p>${img}${yt}</div>`;
+});
+document.getElementById('app').innerHTML=html;
+});
+</script>
+</body>
+</html>
