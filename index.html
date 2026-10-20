@@ -137,6 +137,7 @@ function showCourses(user){
 }
 
 // تحميل الدروس من ملف lessons.json
+
 async function loadLessons(){
   try{
     const res = await fetch('./lessons.json?v='+Date.now());
@@ -144,32 +145,43 @@ async function loadLessons(){
     const container = document.getElementById('lessonsContainer');
     container.innerHTML = "";
     lessons.forEach(lesson => {
+      const yt = lesson.video || lesson.youtube || "";
+      const img = lesson.image || "";
+      const txt = lesson.text || "";
       const div = document.createElement('div');
       div.className = 'lesson-card';
+      div.style.flexDirection = 'column';
+      div.style.alignItems = 'stretch';
       div.innerHTML = `
-        <div class="lesson-info">
-          <div class="lesson-title">${lesson.title}</div>
-          <small style="color:#666">ID: ${lesson.id}</small>
+        <div style="display:flex;justify-content:space-between;align-items:center;width:100%">
+          <div class="lesson-info">
+            <div class="lesson-title">${lesson.title}</div>
+            <small style="color:#666">${txt ? txt.substring(0,60) : 'ID: '+lesson.id}</small>
+          </div>
+          <div class="lesson-badge ${lesson.locked ? 'locked' : 'free'}">${lesson.locked ? '🔒 مقفول' : '▶ مجاني'}</div>
         </div>
-        <div class="lesson-badge ${lesson.locked ? 'locked' : 'free'}">${lesson.locked ? '🔒 مقفول' : '▶ مجاني'}</div>
+        ${img ? `<img src="${img}" style="width:100%;border-radius:10px;margin-top:10px;max-height:180px;object-fit:cover">` : ''}
+        ${yt ? `<div style="margin-top:10px;color:#667eea;font-size:13px">▶ فيديو: ${yt}</div>` : ''}
       `;
       div.onclick = () => {
         if(lesson.locked){
-          alert('🔒 الدرس ده مقفول!\n\nعشان تفتحه:\n1. روح لملف lessons.json\n2. غير locked من true لـ false\n3. اعمل حفظ\n4. التطبيق هيفتحه تلقائي لكل الناس!\n\n(بعدين هنخليه يدفع فلوس عشان يفتح)');
+          alert('🔒 الدرس ده مقفول!\n\nعشان تفتحه:\n1. روح لملف lessons.json\n2. غير locked من true لـ false\n3. اعمل حفظ\n4. التطبيق هيفتحه تلقائي لكل الناس!');
         }else{
-          if(lesson.video){
-            window.open(lesson.video.replace('/embed/','/watch?v='),'_blank');
+          if(yt){
+            const embed = yt.includes('embed') ? yt : yt.includes('watch?v=') ? yt.replace('watch?v=','embed/') : yt;
+            window.open(yt,'_blank');
           }else{
-            alert('افتح الدرس: '+lesson.title);
+            alert('فتح الدرس: '+lesson.title+'\n'+txt);
           }
         }
       };
       container.appendChild(div);
     });
   }catch(e){
-    document.getElementById('lessonsContainer').innerHTML = '<div class="card">❌ مش لاقي ملف lessons.json<br><small>اتأكد انك عملت الملف</small></div>';
+    document.getElementById('lessonsContainer').innerHTML = '<div class="card">❌ مش لاقي ملف lessons.json<br><small>'+e+'</small></div>';
   }
 }
+
 
 // تسجيل خروج
 function logout(){
