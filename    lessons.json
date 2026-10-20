@@ -1,20 +1,30 @@
 [
   {
     "id": 1,
-    "title": "الدرس الأول - المقدمة",
-    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "title": "Lesson 1 - Hello World",
+    "text": "This is the first lesson",
     "locked": false
   },
   {
     "id": 2,
-    "title": "الدرس الثاني - الأساسيات",
-    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "title": "Lesson 2 - Variables",
+    "text": "Variable is like a box to store data",
     "locked": false
   },
   {
     "id": 3,
-    "title": "الدرس الثالث - مقفول 🔒",
-    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "title": "Lesson 3 - YouTube Example",
+    "text": "This lesson has a video",
+    "youtube": "https://www.youtube.com/watch?v=kqtD5dpn9c8",
+    "video": "https://www.youtube.com/embed/kqtD5dpn9c8",
+    "image": "https://images.unsplash.com/photo-1515879218367-8466d9100aaa?w=600",
+    "locked": false
+  },
+  {
+    "id": 4,
+    "title": "Lesson 4 - مقفول 🔒",
+    "text": "ادفع عشان تفتح الدرس ده",
+    "image": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600",
     "locked": true
   }
 ]
