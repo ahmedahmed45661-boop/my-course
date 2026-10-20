@@ -1,30 +1,189 @@
 <!DOCTYPE html>
-<html>
-<head>
+<html lang="ar" dir="rtl">
+<head><style>
+@font-face {
+  font-family: "Optimistic";
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url("/fonts/OptimisticAI_VF_Optimized.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Optimistic Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/OptimisticMono_W_TextRegular.woff2") format("woff2");
+}
+:where(html) {
+  font-family: "Optimistic", system-ui, sans-serif;
+}
+:where(code, pre, kbd, samp) {
+  font-family: "Optimistic Mono", ui-monospace, monospace;
+}
+</style>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ahmed Course</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Course - تعلم بسهولة</title>
 <style>
-body{background:#0f0f0f;color:white;padding:15px;font-family:sans-serif}
-.card{background:#222;padding:15px;border-radius:12px;margin:10px 0}
-img{width:100%;border-radius:10px}
-iframe{width:100%;height:200px;border-radius:10px}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,sans-serif}
+body{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;color:#333}
+.container{max-width:480px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:20px;padding:25px;margin:20px 0;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+.logo{text-align:center;padding:20px 0}
+.logo-icon{width:80px;height:80px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:20px;display:inline-flex;align-items:center;justify-content:center;font-size:40px;color:#fff}
+h1{color:#fff;text-align:center;margin:10px 0;font-size:28px}
+.subtitle{color:rgba(255,255,255,.9);text-align:center;margin-bottom:20px}
+input{width:100%;padding:15px;border:2px solid #e0e0e0;border-radius:12px;font-size:16px;margin:10px 0;transition:.3s;direction:rtl}
+input:focus{border-color:#667eea;outline:none}
+.btn{width:100%;padding:15px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;border-radius:12px;font-size:18px;font-weight:bold;cursor:pointer;margin:10px 0;transition:.3s}
+.btn:active{transform:scale(.98)}
+.lesson-card{background:#fff;border-radius:15px;padding:18px;margin:12px 0;display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 12px rgba(0,0,0,.1);cursor:pointer}
+.lesson-info{flex:1}
+.lesson-title{font-weight:bold;font-size:16px}
+.lesson-badge{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:bold}
+.free{background:#d4edda;color:#155724}
+.locked{background:#f8d7da;color:#721c24}
+.otp-box{display:flex;gap:8px;justify-content:center;margin:15px 0}
+.otp-box input{width:45px;height:50px;text-align:center;font-size:20px;font-weight:bold}
+.hidden{display:none}
+.user-bar{background:rgba(255,255,255,.15);backdrop-filter:blur(10px);border-radius:15px;padding:12px 18px;color:#fff;display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+.small{font-size:12px;color:#666;text-align:center;margin-top:10px}
 </style>
 </head>
 <body>
-<h2>📚 My Course</h2>
-<div id="app">جاري التحميل...</div>
+<div class="container">
+  <!-- شاشة تسجيل الدخول -->
+  <div id="loginScreen">
+    <div class="logo"><div class="logo-icon">🎓</div></div>
+    <h1>مرحبا بك في My Course</h1>
+    <p class="subtitle">سجل دخولك زي الواتساب عشان نبدأ</p>
+    <div class="card" id="step1">
+      <h3 style="margin-bottom:15px">📱 تسجيل الدخول</h3>
+      <input type="text" id="userName" placeholder="اسمك الكامل">
+      <input type="tel" id="userPhone" placeholder="رقم تليفونك - مثال: 01012345678">
+      <button class="btn" onclick="sendOTP()">إرسال كود التأكيد</button>
+      <p class="small">هنبعتلك كود 6 أرقام في رسالة (تجريبي دلوقتي هيظهر على الشاشة)</p>
+    </div>
+    <div class="card hidden" id="step2">
+      <h3 style="margin-bottom:10px">🔐 اكتب كود التأكيد</h3>
+      <p style="font-size:14px;color:#666;margin-bottom:10px">بعتنا كود لـ <span id="phoneDisplay"></span></p>
+      <div style="background:#fff3cd;padding:10px;border-radius:8px;text-align:center;margin:10px 0">
+        <span style="font-size:12px">الكود التجريبي:</span><br>
+        <strong id="demoCode" style="font-size:24px;letter-spacing:5px"></strong>
+      </div>
+      <input type="text" id="otpInput" placeholder="اكتب الـ 6 أرقام هنا" maxlength="6" style="text-align:center;letter-spacing:5px;font-size:20px">
+      <button class="btn" onclick="verifyOTP()">تأكيد ودخول</button>
+      <button class="btn" style="background:#6c757d" onclick="backToStep1()">تغيير الرقم</button>
+    </div>
+  </div>
+
+  <!-- شاشة الكورسات -->
+  <div id="coursesScreen" class="hidden">
+    <div class="user-bar">
+      <div><span id="welcomeName"></span> 👋<br><small id="welcomePhone"></small></div>
+      <button onclick="logout()" style="background:rgba(255,255,255,.2);border:none;color:#fff;padding:8px 12px;border-radius:8px;cursor:pointer">خروج</button>
+    </div>
+    <h1 style="font-size:22px">📚 دروسك</h1>
+    <p class="subtitle" style="font-size:14px">تقدر تعدل الدروس دي في أي وقت من ملف lessons.json</p>
+    <div id="lessonsContainer">جاري تحميل الدروس...</div>
+    <div class="card" style="background:rgba(255,255,255,.9)">
+      <h4>💰 ازاي تجيب فلوس؟</h4>
+      <p style="font-size:13px;margin-top:8px">1. أول درسين مجاناً<br>2. الدرس التالت مقفول 🔒<br>3. لما حد يدوس عليه قوله يدفع فودافون كاش<br>4. بعد ما تغير locked لـ false في lessons.json هيتفتح لكل الناس تلقائي!</p>
+    </div>
+  </div>
+</div>
+
 <script>
-fetch('https://raw.githubusercontent.com/ahmedahmed45661-boop/my-course/main/lessons.json')
-.then(r=>r.json()).then(lessons=>{
-let html='';
-lessons.forEach((l,i)=>{
-let img=l.image?`<img src="${l.image}">`:'';
-let yt=l.youtube?`<iframe src="https://www.youtube.com/embed/${l.youtube.split('v=')[1]}"></iframe>`:'';
-html+=`<div class="card"><b>${i+1}. ${l.title}</b><p>${l.text}</p>${img}${yt}</div>`;
-});
-document.getElementById('app').innerHTML=html;
-});
+let generatedOTP = "";
+let tempUser = {};
+
+// إرسال كود
+function sendOTP(){
+  const name = document.getElementById('userName').value.trim();
+  const phone = document.getElementById('userPhone').value.trim();
+  if(name.length < 2){alert('اكتب اسمك الأول');return}
+  if(!/^01[0125][0-9]{8}$/.test(phone)){alert('اكتب رقم تليفون مصري صحيح - 11 رقم يبدأ بـ 01');return}
+  tempUser = {name, phone};
+  generatedOTP = Math.floor(100000 + Math.random()*900000).toString();
+  document.getElementById('phoneDisplay').innerText = phone;
+  document.getElementById('demoCode').innerText = generatedOTP;
+  document.getElementById('step1').classList.add('hidden');
+  document.getElementById('step2').classList.remove('hidden');
+}
+
+// رجوع
+function backToStep1(){
+  document.getElementById('step2').classList.add('hidden');
+  document.getElementById('step1').classList.remove('hidden');
+}
+
+// تأكيد الكود
+function verifyOTP(){
+  const input = document.getElementById('otpInput').value.trim();
+  if(input !== generatedOTP){alert('الكود غلط! الكود الصح هو: '+generatedOTP);return}
+  // حفظ المستخدم
+  localStorage.setItem('myCourse_user', JSON.stringify(tempUser));
+  showCourses(tempUser);
+}
+
+// عرض الكورسات
+function showCourses(user){
+  document.getElementById('loginScreen').classList.add('hidden');
+  document.getElementById('coursesScreen').classList.remove('hidden');
+  document.getElementById('welcomeName').innerText = user.name;
+  document.getElementById('welcomePhone').innerText = user.phone;
+  loadLessons();
+}
+
+// تحميل الدروس من ملف lessons.json
+async function loadLessons(){
+  try{
+    const res = await fetch('./lessons.json?v='+Date.now());
+    const lessons = await res.json();
+    const container = document.getElementById('lessonsContainer');
+    container.innerHTML = "";
+    lessons.forEach(lesson => {
+      const div = document.createElement('div');
+      div.className = 'lesson-card';
+      div.innerHTML = `
+        <div class="lesson-info">
+          <div class="lesson-title">${lesson.title}</div>
+          <small style="color:#666">ID: ${lesson.id}</small>
+        </div>
+        <div class="lesson-badge ${lesson.locked ? 'locked' : 'free'}">${lesson.locked ? '🔒 مقفول' : '▶ مجاني'}</div>
+      `;
+      div.onclick = () => {
+        if(lesson.locked){
+          alert('🔒 الدرس ده مقفول!\n\nعشان تفتحه:\n1. روح لملف lessons.json\n2. غير locked من true لـ false\n3. اعمل حفظ\n4. التطبيق هيفتحه تلقائي لكل الناس!\n\n(بعدين هنخليه يدفع فلوس عشان يفتح)');
+        }else{
+          if(lesson.video){
+            window.open(lesson.video.replace('/embed/','/watch?v='),'_blank');
+          }else{
+            alert('افتح الدرس: '+lesson.title);
+          }
+        }
+      };
+      container.appendChild(div);
+    });
+  }catch(e){
+    document.getElementById('lessonsContainer').innerHTML = '<div class="card">❌ مش لاقي ملف lessons.json<br><small>اتأكد انك عملت الملف</small></div>';
+  }
+}
+
+// تسجيل خروج
+function logout(){
+  localStorage.removeItem('myCourse_user');
+  location.reload();
+}
+
+// عند فتح التطبيق - لو مسجل قبل كده يدخل على طول
+window.onload = () => {
+  const saved = localStorage.getItem('myCourse_user');
+  if(saved){
+    showCourses(JSON.parse(saved));
+  }
+}
 </script>
-</body>
+<script>(function(){var loc=location.href.replace(/#.*$/,"");var ATTR_NAMES=["data-product-id","data-productid","data-product_id","product-id","productid","product_id","data-source-entity-id","source-entity-id","source_entity_id","data-product","data-metadata","data-meta"];var DATASET_KEYS=["productId","productid","product_id","sourceEntityId","sourceentityid","source_entity_id","product","metadata","meta"];function readProductId(value){if(typeof value!=="string"||value.length===0)return null;if(/^[0-9]{6,}$/.test(value))return value;var match=value.match(/(?:product(?:_|-)?id|source(?:_|-)?entity(?:_|-)?id)["'=:\s]+([0-9]{6,})/i);return match?match[1]:null}function extractProductId(start){for(var node=start;node&&node!==document.body;node=node.parentElement){for(var i=0;i<ATTR_NAMES.length;i++){var attrValue=node.getAttribute&&node.getAttribute(ATTR_NAMES[i]);var attrProductId=readProductId(attrValue);if(attrProductId)return attrProductId}var dataset=node.dataset||null;if(dataset){for(var j=0;j<DATASET_KEYS.length;j++){var dataValue=dataset[DATASET_KEYS[j]];var dataProductId=readProductId(dataValue);if(dataProductId)return dataProductId}}}return null}function isInlineMediaSlotElement(node){return !!(node&&node.getAttribute&&node.getAttribute("data-clippy-inline-media-slot")!==null)}function findInlineMediaSlot(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(isInlineMediaSlotElement(node))return node}return null}function readInlineMediaUrl(node){if(!node)return null;return node.getAttribute&&((node.getAttribute("data-clippy-inline-media-url")||node.getAttribute("data-url")||node.getAttribute("data_url")))||node.href||null}function stripHash(url){return String(url).replace(/#.*$/,"")}function urlsMatch(a,b){if(!a||!b)return false;try{return stripHash(new URL(a,loc).href)===stripHash(new URL(b,loc).href)}catch(_){return stripHash(a)===stripHash(b)}}function isFirstPartyReelUrl(value){try{var url=new URL(value,loc);if(url.protocol!=="https:")return false;var host=url.hostname.toLowerCase();var supported=host==="instagram.com"||host.endsWith(".instagram.com")||host==="facebook.com"||host.endsWith(".facebook.com");return supported&&/\/reels?\//i.test(url.pathname)}catch(_){return false}}function isInlineMediaUrlClick(node,href){var slot=findInlineMediaSlot(node);if(!slot)return false;var slotUrl=readInlineMediaUrl(slot);if(slotUrl)return urlsMatch(href,slotUrl);return isFirstPartyReelUrl(href)}function findDataHref(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(node.getAttribute){var href=node.getAttribute("data-href")||node.getAttribute("data-url");if(href)return{href:href,node:node}}}return null}var nativeOpen=window.open;window.open=function(url){if(parent!==window&&typeof url==="string"&&/^https?:\/\//.test(url)){parent.postMessage({type:"ecto:usercontent-link-click",href:url},"*");return null}return nativeOpen?nativeOpen.apply(window,arguments):null};document.addEventListener("click",function(e){var target=e.target instanceof Element?e.target:null;if(!target)return;if(parent===window)return;var a=target.closest?target.closest("a[href]"):null;if(a&&a.href&&/^https?:\/\//.test(a.href)&&a.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(a,a.href))return;var productId=extractProductId(target)||extractProductId(a);if(productId){e.preventDefault();parent.postMessage({type:"ecto-artifact-link-click",productId:productId},"*");return}e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:a.href},"*");return}var dataHref=findDataHref(target);if(dataHref&&/^https?:\/\//.test(dataHref.href)&&dataHref.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(dataHref.node,dataHref.href))return;e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:dataHref.href},"*")}},true)})();</script><script>(function(){var FOCUS_TYPE="ecto:artifact-focus-request";var CLOSE_TYPE="ecto:artifact-close-request";function focusArtifactDocument(){var body=document.body;if(!body)return;try{window.focus();}catch(e){}if(!body.hasAttribute("tabindex"))body.setAttribute("tabindex","-1");try{body.focus({preventScroll:true});}catch(e){try{body.focus();}catch(e2){}}}window.addEventListener("message",function(event){if(event.source!==window.parent)return;var data=event.data;if(!data||typeof data!=="object"||data.type!==FOCUS_TYPE)return;if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",focusArtifactDocument,{once:true});return;}focusArtifactDocument();});window.addEventListener("keydown",function(event){if(event.key!=="Escape")return;window.setTimeout(function(){if(event.defaultPrevented)return;window.parent.postMessage({type:CLOSE_TYPE},"*");},0);});})();</script></body>
 </html>
